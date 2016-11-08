@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView1;
     private Cursor mCursor;
     private Handler mHandler = new Handler();
+    private View mainView;
 
     private IntentFilter dci = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
     private BroadcastReceiver dcr = new BroadcastReceiver() {
@@ -63,15 +64,29 @@ public class MainActivity extends AppCompatActivity {
         textView.setText("Status");
         textView1.setText("Download: 0%");
 
-        this.registerReceiver(dcr, dci);
+//        this.registerReceiver(dcr, dci);
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        unregisterReceiver(dcr);
+        this.unregisterReceiver(dcr);
     }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        this.registerReceiver(dcr, dci);
+    }
+
+//    @Override
+//    public void onPause()
+//    {
+//        super.onPause();
+//        this.unregisterReceiver(dcr);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.menu_download) {
 //            Intent intent = new Intent(MainActivity.this, HttpExampleActivity.class);
 //            startActivity(intent);
+            mainView = this.findViewById(android.R.id.content);
+            try {
+                myClickHandler(mainView);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
 
